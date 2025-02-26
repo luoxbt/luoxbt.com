@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>luoxbt Terminal</title>
     <style>
         body {
@@ -11,11 +12,26 @@
             margin: 0;
             padding: 20px;
             line-height: 1.6;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         #terminal {
             white-space: pre;
-            font-size: 14px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            #terminal {
+                font-size: 12px;
+                letter-spacing: -1px;
+            }
+
+            body {
+                padding: 10px;
+            }
         }
 
         .cursor {
@@ -106,6 +122,13 @@
         }
 
         window.onload = typeWriter;
+
+        // 禁用双指缩放
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
