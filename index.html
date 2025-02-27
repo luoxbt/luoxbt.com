@@ -77,14 +77,17 @@
             display: flex;
             opacity: 0;
             border: 1px solid transparent;
+            position: relative;
         }
 
         .menu-item .label {
-            width: 250px;
+            width: 120px;
         }
 
         .menu-item .handle {
-            flex: 1;
+            position: absolute;
+            left: calc(50% - 60px);  /* 将这里的值改为计算的 1/2 左边框位置 */
+            white-space: nowrap;
         }
 
         .menu-item.active {
@@ -95,16 +98,6 @@
 
         .menu-item:hover:not(.active) {
             border: 1px solid #ffffff;
-        }
-
-        .animal {
-            position: absolute;
-            bottom: 5px;
-            font-size: 12px;
-            white-space: pre;
-            line-height: 1;
-            cursor: pointer;
-            left: 0;
         }
 
         .hint {
@@ -182,7 +175,6 @@
         let currentIndex = -1;
         const menuItems = document.querySelectorAll('.menu-item');
         const hint = document.querySelector('.hint');
-        let frame = 0;
 
         function updateSelection() {
             menuItems.forEach(item => item.classList.remove('active'));
@@ -191,7 +183,6 @@
             }
         }
 
-        // 打字机效果
         function typewriterEffect() {
             let currentItem = 0;
             const interval = setInterval(() => {
@@ -200,7 +191,6 @@
                     currentItem++;
                 } else {
                     clearInterval(interval);
-                    // 显示提示语
                     setTimeout(() => {
                         hint.style.opacity = '1';
                     }, 500);
@@ -240,79 +230,7 @@
             });
         });
 
-        // 开始打字机效果
         typewriterEffect();
-
-        // 添加狗狗动画
-        const dogWalking = ["(=^･^=)", "(=^･^=)"]; // 使用猫咪替代
-        const dogStanding = "(=^･ω･^=)"; // 站立的猫咪
-
-        const dog = document.createElement('div');
-        dog.className = 'animal';
-        dog.textContent = dogWalking[0];
-        document.querySelector('.menu').appendChild(dog);
-
-        let position = 0;
-        let direction = 1;
-        let isStanding = false;
-        let isInRightBox = false;
-
-        function animateDog() {
-            if (!isStanding) {
-                position += direction * 0.5;
-                
-                const dogWidth = dog.offsetWidth;
-                const containerWidth = dog.parentNode.offsetWidth - 30;
-                
-                if (position < 0) {
-                    position = 0;
-                    direction = 1;
-                    dog.textContent = dogWalking[0];
-                } else if (position > containerWidth - dogWidth) {
-                    position = containerWidth - dogWidth;
-                    direction = -1;
-                    dog.textContent = dogWalking[1];
-                }
-
-                dog.style.left = position + 'px';
-            }
-            requestAnimationFrame(animateDog);
-        }
-
-        document.addEventListener('mousemove', (e) => {
-            const dogRect = dog.getBoundingClientRect();
-            const distance = Math.sqrt(
-                Math.pow(e.clientX - (dogRect.left + dogRect.width/2), 2) +
-                Math.pow(e.clientY - (dogRect.top + dogRect.height/2), 2)
-            );
-            
-            if (distance < 50) {
-                dog.textContent = dogStanding;
-                isStanding = true;
-            } else {
-                dog.textContent = dogWalking[direction > 0 ? 0 : 1];
-                isStanding = false;
-            }
-        });
-
-        dog.addEventListener('click', () => {
-            position = 0;
-            direction = 1;
-            dog.style.left = '0px';
-            dog.textContent = dogWalking[0];
-            
-            if (!isInRightBox) {
-                document.querySelector('.menu').removeChild(dog);
-                document.querySelector('.ascii-art').appendChild(dog);
-                isInRightBox = true;
-            } else {
-                document.querySelector('.ascii-art').removeChild(dog);
-                document.querySelector('.menu').appendChild(dog);
-                isInRightBox = false;
-            }
-        });
-
-        animateDog();
     </script>
 </body>
 </html>
