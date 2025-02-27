@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>luoxbt.com</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #000080;
+            color: #ffffff;
+            font-family: 'Press Start 2P', monospace;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            border: 4px double #ffffff;
+            border-radius: 2px;
+            padding: 20px;
+            width: 95vw;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
+            position: relative;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+            position: relative;
+        }
+
+        .menu, .ascii-art {
+            flex: 1;
+            border: 4px double #ffffff;
+            border-radius: 2px;
+            padding: 15px;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        .menu::before, .ascii-art::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 1px solid #ffffff;
+            pointer-events: none;
+        }
+
+        .ascii-art {
+            white-space: pre;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 18px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .ascii-container {
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.2;
+        }
+
+        .menu-item {
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            opacity: 0;
+            border: 1px solid transparent;
+        }
+
+        .menu-item .label {
+            width: 250px;
+        }
+
+        .menu-item .handle {
+            flex: 1;
+        }
+
+        .menu-item.active {
+            background: #ffffff;
+            color: #000080;
+            border: 1px solid #000080;
+        }
+
+        .menu-item:hover:not(.active) {
+            border: 1px solid #ffffff;
+        }
+
+        .animal {
+            position: absolute;
+            bottom: 5px;
+            font-size: 12px;
+            white-space: pre;
+            line-height: 1;
+            cursor: pointer;
+            left: 0;
+        }
+
+        .hint {
+            text-align: center;
+            margin-top: 30px;
+            opacity: 0;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        }
+
+        @media (max-aspect-ratio: 4/3) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .menu, .ascii-art {
+                width: auto;
+            }
+            
+            .ascii-art {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Welcome to luoxbt.com</div>
+        <div class="content">
+            <div class="menu">
+                <div class="menu-item" data-url="https://twitter.com/luoxbt">
+                    <div class="label">1. Twitter:</div>
+                    <div class="handle">@luoxbt</div>
+                </div>
+                <div class="menu-item" data-url="https://warpcast.com/luoxbt">
+                    <div class="label">2. Farcaster:</div>
+                    <div class="handle">@luoxbt</div>
+                </div>
+                <div class="menu-item" data-url="https://bsky.app/profile/luoxbt.com">
+                    <div class="label">3. Bluesky:</div>
+                    <div class="handle">@luoxbt.com</div>
+                </div>
+                <div class="menu-item" data-url="mailto:contact@luoxbt.com">
+                    <div class="label">4. Email:</div>
+                    <div class="handle">admin@luoxbt.com</div>
+                </div>
+
+                <div class="hint">select item to explore</div>
+            </div>
+            <div class="ascii-art">
+                <div class="ascii-container">
+██╗     ██╗   ██╗ ██████╗ ██╗  ██╗██████╗ ████████╗
+██║     ██║   ██║██╔═══██╗╚██╗██╔╝██╔══██╗╚══██╔══╝
+██║     ██║   ██║██║   ██║ ╚███╔╝ ██████╔╝   ██║
+██║     ██║   ██║██║   ██║ ██╔██╗ ██╔══██╗   ██║
+███████╗╚██████╔╝╚██████╔╝██╔╝ ██╗██████╔╝   ██║
+╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝    ╚═╝</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentIndex = -1;
+        const menuItems = document.querySelectorAll('.menu-item');
+        const hint = document.querySelector('.hint');
+        let frame = 0;
+
+        function updateSelection() {
+            menuItems.forEach(item => item.classList.remove('active'));
+            if (currentIndex >= 0) {
+                menuItems[currentIndex].classList.add('active');
+            }
+        }
+
+        // 打字机效果
+        function typewriterEffect() {
+            let currentItem = 0;
+            const interval = setInterval(() => {
+                if (currentItem < menuItems.length) {
+                    menuItems[currentItem].style.opacity = '1';
+                    currentItem++;
+                } else {
+                    clearInterval(interval);
+                    // 显示提示语
+                    setTimeout(() => {
+                        hint.style.opacity = '1';
+                    }, 500);
+                }
+            }, 800);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                currentIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
+                updateSelection();
+            } else if (e.key === 'ArrowDown') {
+                currentIndex = (currentIndex + 1) % menuItems.length;
+                updateSelection();
+            } else if (e.key === 'Enter') {
+                if (currentIndex >= 0) {
+                    const url = menuItems[currentIndex].getAttribute('data-url');
+                    window.open(url, '_blank');
+                }
+            }
+        });
+
+        menuItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const url = item.getAttribute('data-url');
+                window.open(url, '_blank');
+            });
+            
+            item.addEventListener('mouseover', () => {
+                currentIndex = index;
+                updateSelection();
+            });
+
+            item.addEventListener('mouseout', () => {
+                currentIndex = -1;
+                updateSelection();
+            });
+        });
+
+        // 开始打字机效果
+        typewriterEffect();
+
+        // 添加狗狗动画
+        const dogWalking = ["૮₍˶•ᴥ•˶₎ა⊃", "⊂ა₍˶•ᴥ•˶₎૮"]; // 左右朝向的狗
+        const dogStanding = "૮₍ 𝁽ܫ𝁽 ₎ა"; // 站立的狗
+
+        const dog = document.createElement('div');
+        dog.className = 'animal';
+        dog.textContent = dogWalking[0];
+        document.querySelector('.menu').appendChild(dog);
+
+        let position = 0;
+        let direction = 1;
+        let isStanding = false;
+        let isInRightBox = false;
+
+        function animateDog() {
+            if (!isStanding) {
+                position += direction * 0.5; // 减慢移动速度
+                
+                // 获取狗狗的宽度和父容器的宽度
+                const dogWidth = dog.offsetWidth;
+                const containerWidth = dog.parentNode.offsetWidth - 30; // 减去一些padding
+                
+                if (position < 0) {
+                    position = 0;
+                    direction = 1;
+                    dog.textContent = dogWalking[0];
+                } else if (position > containerWidth - dogWidth) {
+                    position = containerWidth - dogWidth;
+                    direction = -1;
+                    dog.textContent = dogWalking[1];
+                }
+
+                dog.style.left = position + 'px';
+            }
+            requestAnimationFrame(animateDog);
+        }
+
+        // 检测鼠标是否靠近狗狗
+        document.addEventListener('mousemove', (e) => {
+            const dogRect = dog.getBoundingClientRect();
+            const distance = Math.sqrt(
+                Math.pow(e.clientX - (dogRect.left + dogRect.width/2), 2) +
+                Math.pow(e.clientY - (dogRect.top + dogRect.height/2), 2)
+            );
+            
+            if (distance < 50) {
+                dog.textContent = dogStanding;
+                isStanding = true;
+            } else {
+                dog.textContent = dogWalking[direction > 0 ? 0 : 1];
+                isStanding = false;
+            }
+        });
+
+        // 点击狗狗在左右方框之间跳转
+        dog.addEventListener('click', () => {
+            position = 0;
+            direction = 1;
+            dog.style.left = '0px';
+            dog.textContent = dogWalking[0];
+            
+            if (!isInRightBox) {
+                // 从左边跳到右边
+                document.querySelector('.menu').removeChild(dog);
+                document.querySelector('.ascii-art').appendChild(dog);
+                isInRightBox = true;
+            } else {
+                // 从右边跳回左边
+                document.querySelector('.ascii-art').removeChild(dog);
+                document.querySelector('.menu').appendChild(dog);
+                isInRightBox = false;
+            }
+        });
+
+        animateDog();
+    </script>
+</body>
+</html>
