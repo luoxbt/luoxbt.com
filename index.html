@@ -28,8 +28,8 @@
             height: 90vh;
             display: flex;
             flex-direction: column;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
             position: relative;
+            margin: 10px;
         }
 
         .title {
@@ -53,18 +53,6 @@
             border-radius: 2px;
             padding: 15px;
             position: relative;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
-        }
-
-        .menu::before, .ascii-art::before {
-            content: "";
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border: 1px solid #ffffff;
-            pointer-events: none;
         }
 
         .ascii-art {
@@ -136,7 +124,16 @@
             }
             
             .ascii-art {
-                font-size: 12px;
+                font-size: 10px;
+            }
+
+            body {
+                font-size: 0.8em;
+            }
+
+            .container {
+                margin: 5px;
+                padding: 10px;
             }
         }
     </style>
@@ -247,8 +244,8 @@
         typewriterEffect();
 
         // 添加狗狗动画
-        const dogWalking = ["૮₍˶•ᴥ•˶₎ა⊃", "⊂ა₍˶•ᴥ•˶₎૮"]; // 左右朝向的狗
-        const dogStanding = "૮₍ 𝁽ܫ𝁽 ₎ა"; // 站立的狗
+        const dogWalking = ["(=^･^=)", "(=^･^=)"]; // 使用猫咪替代
+        const dogStanding = "(=^･ω･^=)"; // 站立的猫咪
 
         const dog = document.createElement('div');
         dog.className = 'animal';
@@ -262,11 +259,10 @@
 
         function animateDog() {
             if (!isStanding) {
-                position += direction * 0.5; // 减慢移动速度
+                position += direction * 0.5;
                 
-                // 获取狗狗的宽度和父容器的宽度
                 const dogWidth = dog.offsetWidth;
-                const containerWidth = dog.parentNode.offsetWidth - 30; // 减去一些padding
+                const containerWidth = dog.parentNode.offsetWidth - 30;
                 
                 if (position < 0) {
                     position = 0;
@@ -283,7 +279,6 @@
             requestAnimationFrame(animateDog);
         }
 
-        // 检测鼠标是否靠近狗狗
         document.addEventListener('mousemove', (e) => {
             const dogRect = dog.getBoundingClientRect();
             const distance = Math.sqrt(
@@ -300,7 +295,6 @@
             }
         });
 
-        // 点击狗狗在左右方框之间跳转
         dog.addEventListener('click', () => {
             position = 0;
             direction = 1;
@@ -308,12 +302,10 @@
             dog.textContent = dogWalking[0];
             
             if (!isInRightBox) {
-                // 从左边跳到右边
                 document.querySelector('.menu').removeChild(dog);
                 document.querySelector('.ascii-art').appendChild(dog);
                 isInRightBox = true;
             } else {
-                // 从右边跳回左边
                 document.querySelector('.ascii-art').removeChild(dog);
                 document.querySelector('.menu').appendChild(dog);
                 isInRightBox = false;
