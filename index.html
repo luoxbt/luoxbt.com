@@ -1,240 +1,1633 @@
-
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>luoxbt.com</title>
+    <title>LUMINDEX</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        
+        :root {
+            --bg-primary: #0a0c10;
+            --bg-secondary: rgba(22, 27, 34, 0.8);
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border-color: rgba(48, 54, 61, 0.6);
+            --hover-bg: rgba(31, 41, 55, 0.8);
+            --positive: #3fb950;
+            --negative: #f85149;
+            --accent: #58a6ff;
+            --gradient-start: #58a6ff;
+            --gradient-end: #3fb950;
+        }
+
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background: #000080;
-            color: #ffffff;
-            font-family: 'Press Start 2P', monospace;
-            line-height: 1.6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden; /* 添加这一行，防止body出现滚动条 */
         }
 
         .container {
-            border: 4px double #ffffff;
-            border-radius: 2px;
-            padding: 20px;
-            width: 95vw;
-            height: 90vh;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            position: relative;
-            margin: 10px;
-        }
-
-        .title {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-        }
-
-        .content {
-            display: flex;
-            gap: 20px;
-            flex: 1;
-            min-height: 0;
-            position: relative;
-        }
-
-        .menu, .ascii-art {
-            flex: 1;
-            border: 4px double #ffffff;
-            border-radius: 2px;
-            padding: 15px;
-            position: relative;
-        }
-
-        .ascii-art {
-            white-space: pre;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 18px;
-            overflow: hidden;
-            display: flex;
             align-items: center;
-            justify-content: center;
-            line-height: 1;
-        }
-
-        .ascii-container {
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 1.2;
-        }
-
-        .menu-item {
-            padding: 8px;
-            cursor: pointer;
-            display: flex;
-            opacity: 0;
-            border: 1px solid transparent;
+            height: auto;
+            min-height: calc(100vh - 40px);
             position: relative;
         }
 
-        .menu-item .label {
-            width: 120px;
+
+
+        /* 增强标题辉光效果 - 移除闪烁动画，保留静态发光效果 */
+        .container h1 {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.4),
+                         0 0 20px rgba(88, 166, 255, 0.3),
+                         0 0 30px rgba(88, 166, 255, 0.2);
+            /* 移除动画效果，保留静态发光 */
         }
 
-        .menu-item .handle {
-            position: absolute;
-            left: calc(50%);  /* 将这里的值改为计算的 1/2 左边框位置 */
-            white-space: nowrap;
+        /* 新增表格容器样式 */
+        .table-container {
+            width: 100%;
+            max-width: 1320px;
+            height: auto;
+            max-height: calc(100vh - 200px); /* 调整底部栏空间 */
+            overflow: hidden;
+            margin-bottom: 30px; /* 缩小底部栏间距 */
+            border-radius: 16px;
+            background-color: var(--bg-primary);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
-        .menu-item.active {
-            background: #ffffff;
-            color: #000080;
-            border: 1px solid #000080;
+        .token-table {
+            width: 1320px;
+            min-width: 1320px;
+            table-layout: fixed;
+            --row-height: 25px; /* 调整后的标题行高度 */
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            flex: 1;
+            overflow: auto;
         }
 
-        .menu-item:hover:not(.active) {
-            border: 1px solid #ffffff;
+        .token-table tbody tr {
+            height: var(--row-height);
+            transition: all 0.2s ease;
         }
 
-        .hint {
-            text-align: center;
-            margin-top: 30px;
-            opacity: 0;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        .token-table tbody tr:hover {
+            background-color: var(--hover-bg);
         }
 
-        @media (max-aspect-ratio: 4/3) {
-            .content {
-                flex-direction: column;
-            }
-            
-            .menu, .ascii-art {
-                width: auto;
-            }
-            
-            .ascii-art {
-                font-size: 10px;
-            }
-
-            body {
-                font-size: 0.8em;
-            }
-
-            .container {
-                margin: 5px;
-                padding: 10px;
-            }
+        .token-table th {
+            height: var(--row-height);
+            padding: 0.3rem 0.8rem; /* 优化后的紧凑内边距 */
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--bg-primary);
         }
-    </style>
+
+        .token-table td {
+            height: var(--row-height);
+            padding: 0.5rem 1rem; /* 减少内边距 */
+        }
+
+        margin: 0; /* 移除可能的默认外边距 */
+    }
+
+    .token-table td {
+        box-sizing: border-box;
+        vertical-align: middle;
+        line-height: 1.4;
+        height: var(--row-height);
+        min-height: var(--row-height);
+        max-height: var(--row-height);
+        padding: 8px;
+    }
+
+    /* 移除所有子元素对高度的干扰 */
+    .token-info, .price-change-group {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    /* 滚动条样式定制 */
+    .table-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track,
+    .table-container::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        transition: background-color 0.3s ease;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+        background: var(--text-secondary);
+    }
+
+    /* 固定表头 */
+    /* 此处样式已移至底部，避免样式冲突 */
+
+    .header-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.header-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(88, 166, 255, 0.2);
+}
+
+h1 {
+        color: transparent;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        letter-spacing: -0.5px;
+        text-shadow: 0 0 10px rgba(88, 166, 255, 0.4),
+                     0 0 20px rgba(88, 166, 255, 0.3),
+                     0 0 30px rgba(88, 166, 255, 0.2);
+        /* 增强静态发光效果，移除闪烁动画 */
+    }
+
+    .token-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: transparent;
+        border-radius: 16px;
+        overflow: hidden;
+        table-layout: fixed;
+    }
+
+    .token-table th, .token-table td {
+        padding: 0.3rem 0.8rem; /* 优化后的紧凑内边距 */
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.875rem;
+        overflow: hidden;
+        text-overflow: ellipsis; /* 溢出时显示省略号 */
+        white-space: nowrap; /* 防止文本换行 */
+    }
+
+    /* 恢复 Token 名称和代号的原始大小 */
+    .token-name {
+        font-weight: 500;
+        font-size: 1rem; /* 原始名称字号 */
+    }
+    
+    .token-symbol {
+        color: var(--text-secondary);
+        font-size: 0.875rem; /* 保持原有小号字体 */
+    }
+
+    /* 列宽度设置 */
+    .token-table th.compact-column,
+    .token-table td.compact-column {
+        padding: 0.5rem 0.5rem 2rem 1rem; /* 减小上下内边距，增加左内边距，保持右侧空间 */
+        text-align: left; /* 改为左对齐 */
+        min-width: 80px;
+    }
+
+    /* 价格变化和交易量列宽度 */
+    .token-table th[data-sort^="priceChange."],
+    .token-table th[data-sort="volume"],
+    .token-table th[data-sort="liquidity"] {
+        min-width: 80px;
+        width: 80px;
+        max-width: 80px;
+    }
+    
+    .token-table th.chart-column {
+        text-align: center;
+    }
+    .token-table th.chart-column {
+        padding: 1rem 0.5rem;
+        width: 100px;
+    }
+
+    .token-table th {
+        background-color: rgba(22, 27, 34, 0.9);
+        color: var(--text-primary);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 100px;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding-right: 20px;
+        border-bottom: 2px solid var(--border-color);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .token-table th:hover {
+        background-color: var(--hover-bg);
+        color: var(--accent);
+    }
+
+    .token-table th > span:not(.sort-indicator) {
+        display: block;
+        text-align: center;
+    }
+
+    .token-table th .sort-indicator {
+        display: inline-block;
+        position: relative;
+        margin-left: 4px;
+        vertical-align: middle;
+    }
+
+    .token-table th:hover {
+        background-color: var(--hover-bg);
+    }
+
+    .token-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .token-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .token-info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .positive { color: var(--positive); }
+    .negative { color: var(--negative); }
+    
+    /* 交易量容器样式 */
+    .volume-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .volume-value {
+        text-align: right;
+        min-width: 50px;
+        margin-right: 8px;
+    }
+    
+    /* 交易量指示符号样式 */
+    .volume-indicator-1, .volume-indicator-2, .volume-indicator-3, .volume-indicator-4, .volume-indicator-5 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #3fb950 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-size: 0.9rem;
+        transform: scaleX(0.8);
+        display: inline-block;
+        text-align: left;
+        width: 60px;
+    }
+    
+    .volume-indicator-2 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #4ac866 100%);
+    }
+    
+    .volume-indicator-3 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #56d77c 100%);
+    }
+    
+    .volume-indicator-4 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #62e692 100%);
+    }
+    
+    .volume-indicator-5 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #6ef5a8 100%);
+    }
+
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-secondary);
+    }
+
+    .price-change-group {
+        display: flex;
+        gap: 8px;
+        font-size: 0.875rem;
+    }
+
+    .price-change-item {
+        padding: 4px 8px;
+        border-radius: 4px;
+        background-color: var(--bg-primary);
+    }
+
+    select {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    select:hover {
+        background-color: var(--hover-bg);
+    }
+
+    .token-name {
+        font-weight: 500;
+    }
+
+    .token-symbol {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .last-update {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        background-color: var(--bg-primary);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .update-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--positive);
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { 
+            opacity: 0.4;
+            filter: drop-shadow(0 0 8px rgba(88, 166, 255, 0.6))
+                    drop-shadow(0 0 20px rgba(88, 166, 255, 0.4));
+        }
+        50% {
+            opacity: 1;
+            filter: drop-shadow(0 0 12px rgba(88, 166, 255, 0.8))
+                    drop-shadow(0 0 30px rgba(88, 166, 255, 0.6));
+        }
+        100% { 
+            opacity: 0.4;
+            filter: drop-shadow(0 0 8px rgba(88, 166, 255, 0.6))
+                    drop-shadow(0 0 20px rgba(88, 166, 255, 0.4));
+        }
+    }
+
+    @keyframes text-glow {
+        from {
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.4),
+                         0 0 20px rgba(88, 166, 255, 0.3);
+        }
+        to {
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.6),
+                         0 0 30px rgba(88, 166, 255, 0.4),
+                         0 0 40px rgba(88, 166, 255, 0.2);
+        }
+    }
+
+    /* 添加 token 链接样式 */
+    .token-links {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+    }
+    
+    .token-links a {
+        text-decoration: none;
+        font-size: 16px;
+        opacity: 0.7;
+        transition: opacity 0.2s, transform 0.2s;
+        color: var(--text-secondary);
+        padding: 0 4px;
+    }
+    
+    .token-links a:hover {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    .sort-indicator {
+        display: inline-block;
+        width: 12px;
+        text-align: center;
+        margin-left: 4px;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        opacity: 0;  /* 默认不可见 */
+        position: relative;
+        vertical-align: middle;
+    }
+    
+    .sort-indicator.active {
+        color: var(--accent);
+        opacity: 1;  /* 激活时可见 */
+    }
+
+    .token-table th[data-sort="name"] {
+        width: 180px;
+        min-width: 180px;
+        max-width: 180px;
+    }
+
+    .token-table th[data-sort="price"],
+    .token-table th[data-sort="marketCap"] {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    /* 新增 Volume 列宽度设置 */
+    .token-table th[data-sort="volume"] {
+        width: 140px;
+        min-width: 140px;
+        max-width: 140px;
+    }
+
+    .token-table th[data-sort="liquidity"] {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    .token-table th.chart-column {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+        padding: 0.3rem 0.4rem;
+    }
+
+    .token-table th[data-sort="priceChange.m5"],
+    .token-table th[data-sort="priceChange.h1"],
+    .token-table th[data-sort="priceChange.h6"],
+    .token-table th[data-sort="priceChange.h24"] {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+    }
+</style>
 </head>
 <body>
     <div class="container">
-        <div class="title">Welcome to luoxbt.com</div>
-        <div class="content">
-            <div class="menu">
-                <div class="menu-item" data-url="/index/index.html">
-                    <div class="label">LUMINDEX</div>
-                    <div class="handle">luoxbt.com/index</div>
-                </div>
-                <div class="menu-item" data-url="https://twitter.com/luoxbt">
-                    <div class="label">Twitter</div>
-                    <div class="handle">@luoxbt</div>
-                </div>
-                <div class="menu-item" data-url="https://warpcast.com/luoxbt">
-                    <div class="label">Farcaster</div>
-                    <div class="handle">@luoxbt</div>
-                </div>
-                <div class="menu-item" data-url="https://bsky.app/profile/luoxbt.com">
-                    <div class="label">Bluesky</div>
-                    <div class="handle">@luoxbt.com</div>
-                </div>
-                <div class="menu-item" data-url="https://github.com/luoxbt">
-                    <div class="label">Github</div>
-                    <div class="handle">@luoxbt</div>
-                </div>
-                <div class="menu-item" data-url="mailto:contact@luoxbt.com">
-                    <div class="label">Email</div>
-                    <div class="handle">admin@luoxbt.com</div>
-                </div>
-                <div class="hint">select item to explore</div>
-            </div>
-            <div class="ascii-art">
-                <div class="ascii-container">
-██╗     ██╗   ██╗ ██████╗ ██╗  ██╗██████╗ ████████╗
-██║     ██║   ██║██╔═══██╗╚██╗██╔╝██╔══██╗╚══██╔══╝
-██║     ██║   ██║██║   ██║ ╚███╔╝ ██████╔╝   ██║
-██║     ██║   ██║██║   ██║ ██╔██╗ ██╔══██╗   ██║
-███████╗╚██████╔╝╚██████╔╝██╔╝ ██╗██████╔╝   ██║
-╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝    ╚═╝</div>
-            </div>
+        <div id="lastUpdate" class="last-update"><span class="update-indicator"></span>Last update: Just now</div>
+        <div class="header-container">
+    <img src="https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/7319cab8-bf4c-4054-316b-5c788d24ac00/rectcrop3" class="header-logo">
+    <h1>LUMINDEX by @luoxbt</h1>
+</div>
+        <div class="table-container"> <!-- 新增滚动容器 -->
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th data-sort="name">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span>Token <span class="sort-indicator">↓</span></span>
+                                <select id="chainFilter" style="margin-right: 4px;">
+                                    <option value="all" selected>All Chains</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th data-sort="price">Price <span class="sort-indicator">↓</span></th>
+                        <th data-sort="marketCap">MarketCap <span class="sort-indicator">↓</span></th>
+                        <th data-sort="priceChange.m5" class="compact-column">5m % <span class="sort-indicator">↓</span></th>
+                        <th data-sort="priceChange.h1" class="compact-column">1h % <span class="sort-indicator">↓</span></th>
+                        <th data-sort="priceChange.h6" class="compact-column">6h % <span class="sort-indicator">↓</span></th>
+                        <th data-sort="priceChange.h24" class="compact-column">24h % <span class="sort-indicator">↓</span></th>
+                        <th class="compact-column">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 120px;">
+                                <span data-sort="volume" style="cursor: pointer;">Volume <span class="sort-indicator">↓</span></span>
+                                <select id="volumeTimeframe" style="margin-right: 4px;">
+                                    <option value="m5">5m</option>
+                                    <option value="h1">1h</option>
+                                    <option value="h6">6h</option>
+                                    <option value="h24" selected>24h</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th data-sort="liquidity" class="compact-column">Liquidity <span class="sort-indicator">↓</span></th>
+                        <th class="chart-column">Chart</th>
+                    </tr>
+                </thead>
+                <tbody id="tokenTableBody">
+                    <tr>
+                        <td colspan="10" class="loading">Loading data...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <script>
-        let currentIndex = -1;
-        const menuItems = document.querySelectorAll('.menu-item');
-        const hint = document.querySelector('.hint');
+    <script type="module">
+        // 导入tokenAddresses数组
+        import { tokenAddresses } from './tokenAddresses.js';
 
-        function updateSelection() {
-            menuItems.forEach(item => item.classList.remove('active'));
-            if (currentIndex >= 0) {
-                menuItems[currentIndex].classList.add('active');
-            }
+        let tokens = [];
+        let filteredTokens = [];
+        let currentSort = {
+            column: 'marketCap',
+            direction: 'desc'
+        };
+        let currentVolumeTimeframe = 'h24';
+        let currentChain = 'all';
+        let lastUpdateTime = new Date();
+
+        /**
+         * 检查链是否被GMGN支持
+         * @param {string} chainId - 链ID
+         * @returns {boolean} 是否支持
+         */
+        function isGmgnSupported(chainId) {
+            if (!chainId) return false;
+            const supportedChains = ['solana', 'eth', 'base', 'bsc', 'blast', 'tron'];
+            return supportedChains.includes(chainId.toLowerCase());
         }
 
-        function typewriterEffect() {
-            let currentItem = 0;
-            const interval = setInterval(() => {
-                if (currentItem < menuItems.length) {
-                    menuItems[currentItem].style.opacity = '1';
-                    currentItem++;
-                } else {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        hint.style.opacity = '1';
-                    }, 500);
-                }
-            }, 800);
+        // 获取GMGN链接中使用的链ID
+        function getGmgnChainId(chainId) {
+            if (!chainId) return '';
+            const chain = chainId.toLowerCase();
+            // Solana在GMGN中使用'sol'而不是'solana'
+            return chain === 'solana' ? 'sol' : chain;
         }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowUp') {
-                currentIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
-                updateSelection();
-            } else if (e.key === 'ArrowDown') {
-                currentIndex = (currentIndex + 1) % menuItems.length;
-                updateSelection();
-            } else if (e.key === 'Enter') {
-                if (currentIndex >= 0) {
-                    const url = menuItems[currentIndex].getAttribute('data-url');
-                    window.open(url, '_blank');
+        /**
+         * 将数字格式化为带单位的紧凑形式
+         * @param {number} number - 要格式化的数字
+         * @returns {string} 格式化后的字符串（带B/M/K单位）
+         */
+        function formatCompactNumber(number) {
+            const units = [
+                { value: 1e9, symbol: 'B' },
+                { value: 1e6, symbol: 'M' },
+                { value: 1e3, symbol: 'K' }
+            ];
+            
+            for (const { value, symbol } of units) {
+                if (number >= value) {
+                    return (number / value).toFixed(2) + symbol;
                 }
             }
-        });
+            return number.toFixed(2);
+        }
 
-        menuItems.forEach((item, index) => {
-            item.addEventListener('click', () => {
-                const url = item.getAttribute('data-url');
-                window.open(url, '_blank');
+        /**
+         * 更新交易量时间范围并重新渲染表格
+         * @param {string} timeframe - 时间范围（'m5'、'h1'、'h6'或'h24'）
+         */
+        function updateVolumeTimeframe(timeframe) {
+            currentVolumeTimeframe = timeframe;
+            renderTable();
+        }
+
+        /**
+         * 更新链筛选器并重新渲染表格
+         * @param {string} chain - 链ID或'all'
+         */
+        function updateChainFilter(chain) {
+            currentChain = chain;
+            filteredTokens = currentChain === 'all' ? 
+                tokens : 
+                tokens.filter(token => token.chainId?.toLowerCase() === currentChain);
+            sortTokens(currentSort.column, currentSort.direction);
+            renderTable();
+        }
+
+        function getVolumeForTimeframe(token) {
+            return token.volume?.[currentVolumeTimeframe] || 0;
+        }
+        
+        /**
+         * 根据交易量大小格式化并添加指示符号
+         * @param {number} volume - 交易量数值
+         * @returns {string} 格式化后的HTML字符串，包含数值和指示符号
+         */
+        function formatVolumeWithIndicator(volume) {
+            let indicator = '';
+            let indicatorClass = '';
+            
+            if (volume < 100000) {
+                indicator = '▃';
+                indicatorClass = 'volume-indicator-1';
+            } else if (volume < 1000000) {
+                indicator = '▃▅';
+                indicatorClass = 'volume-indicator-2';
+            } else if (volume < 10000000) {
+                indicator = '▃▅▆';
+                indicatorClass = 'volume-indicator-3';
+            } else if (volume < 100000000) {
+                indicator = '▃▅▆▇';
+                indicatorClass = 'volume-indicator-4';
+            } else {
+                indicator = '▃▅▆▇▉';
+                indicatorClass = 'volume-indicator-5';
+            }
+            
+            return `<div class="volume-container"><div class="volume-value">$${formatCompactNumber(volume)}</div><div class="${indicatorClass}">${indicator}</div></div>`;
+        }
+
+        function formatPriceChange(change) {
+            if (!change && change !== 0) return '-';
+            const formattedChange = change.toFixed(2);
+            const symbol = change > 0 ? '↗' : '↘';
+            return `${symbol} ${formattedChange}%`;
+        }
+
+        function renderPriceChanges(token) {
+            const timeframes = [
+                { key: 'm5', label: '5m' },
+                { key: 'h1', label: '1h' },
+                { key: 'h6', label: '6h' },
+                { key: 'h24', label: '24h' }
+            ];
+
+            return `
+                <div class="price-change-group">
+                    ${timeframes.map(tf => `
+                        <span class="price-change-item ${token.priceChange?.[tf.key] > 0 ? 'positive' : 'negative'}">
+                            ${tf.label}: ${formatPriceChange(token.priceChange?.[tf.key])}
+                        </span>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function updateChainFilterOptions() {
+            const chainFilter = document.getElementById('chainFilter');
+            const uniqueChains = new Set(tokens.map(token => token.chainId?.toLowerCase()).filter(Boolean));
+            
+            // Clear existing options except "All Chains"
+            chainFilter.innerHTML = '<option value="all" selected>All Chains</option>';
+            
+            // Add new options
+            uniqueChains.forEach(chain => {
+                const option = document.createElement('option');
+                option.value = chain;
+                option.textContent = chain.charAt(0).toUpperCase() + chain.slice(1);
+                chainFilter.appendChild(option);
+            });
+        }
+
+        // 获取DEXscreener图表的URL
+        /**
+         * 获取DEXscreener图表URL
+         * @param {Object} token - 代币对象
+         * @param {string} token.chainId - 链ID
+         * @param {Object} token.baseToken - 基础代币信息
+         * @param {string} token.baseToken.address - 代币地址
+         * @returns {string|null} 图表URL或null
+         */
+        function getDexScreenerChartUrl(token) {
+            if (!token.chainId || !token.baseToken.address) return null;
+            return `https://dexscreener.com/${token.chainId}/${token.baseToken.address}?embed=1&theme=dark&trades=0&info=0`;
+        }
+        
+        // 存储展开状态的数组
+        let expandedRows = [];
+        
+        // 从本地存储加载展开状态
+        function loadExpandedState() {
+            const savedState = localStorage.getItem('expandedRows');
+            if (savedState) {
+                try {
+                    expandedRows = JSON.parse(savedState);
+                } catch (e) {
+                    console.error('Error loading expanded state:', e);
+                    expandedRows = [];
+                }
+            }
+        }
+        
+        // 保存展开状态到本地存储
+        function saveExpandedState() {
+            localStorage.setItem('expandedRows', JSON.stringify(expandedRows));
+        }
+        
+        // 处理行点击事件，展开或折叠图表
+        /**
+         * 处理行点击事件，展开或折叠图表
+         * @param {number} tokenIndex - 代币在列表中的索引
+         */
+        function handleRowClick(tokenIndex) {
+            const token = filteredTokens[tokenIndex];
+            const tbody = document.getElementById('tokenTableBody');
+            const rows = tbody.querySelectorAll('tr.token-row');
+            const chartRows = tbody.querySelectorAll('tr.chart-row');
+            
+            const currentRow = rows[tokenIndex];
+            const currentChartRow = chartRows[tokenIndex];
+            
+            // 折叠已展开的图表
+            if (currentRow.classList.contains('active')) {
+                currentRow.classList.remove('active');
+                currentChartRow.classList.remove('expanded');
+                
+                const index = expandedRows.indexOf(tokenIndex);
+                if (index !== -1) {
+                    expandedRows.splice(index, 1);
+                    saveExpandedState();
+                }
+                return;
+            }
+            
+            // 激活当前行并展开图表（不关闭其他图表）
+            currentRow.classList.add('active');
+            currentChartRow.classList.add('expanded');
+            
+            // 添加到展开状态数组
+            if (!expandedRows.includes(tokenIndex)) {
+                expandedRows.push(tokenIndex);
+                saveExpandedState();
+            }
+            
+            // 如果图表尚未加载，则加载图表
+            const iframe = currentChartRow.querySelector('iframe');
+            if (iframe && !iframe.src) {
+                const chartUrl = getDexScreenerChartUrl(token);
+                if (chartUrl) {
+                    iframe.src = chartUrl;
+                }
+            }
+            
+            // 滚动到图表位置
+            setTimeout(() => {
+                currentChartRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tokenTableBody');
+            const existingChartRows = new Map();
+            
+            // 保存已展开图表的iframe信息
+            tbody.querySelectorAll('tr.chart-row.expanded').forEach(chartRow => {
+                const dataRowIndex = parseInt(chartRow.previousElementSibling.dataset.index);
+                const iframe = chartRow.querySelector('iframe');
+                if (iframe && iframe.src) {
+                    existingChartRows.set(dataRowIndex, iframe.src);
+                }
             });
             
-            item.addEventListener('mouseover', () => {
-                currentIndex = index;
-                updateSelection();
+            // 清空表格内容
+            tbody.innerHTML = '';
+            
+            // 为每个token创建两行：数据行和图表行
+            filteredTokens.forEach((token, index) => {
+                // 创建数据行
+                const dataRow = document.createElement('tr');
+                dataRow.className = 'token-row';
+                dataRow.dataset.index = index;
+                dataRow.innerHTML = `
+                    <td>
+                        <div class="token-info">
+                            <div style="position: relative; display: inline-block;">
+                                ${token.info?.imageUrl ? 
+                                    `<img src="${token.info.imageUrl}" class="token-icon" alt="${token.baseToken.name}">` : 
+                                    `<div class="token-icon" style="background: #2D2D2D; display: flex; filter: none !important; box-shadow: none !important; 
+                                        align-items: center; justify-content: center; font-size: 18px; color: var(--text-secondary);">
+                                        ?
+                                    </div>`}
+                                ${token.chainId ? `
+                                    <img src="https://dd.dexscreener.com/ds-data/chains/${token.chainId}.png" 
+                                         style="position: absolute; 
+                                                bottom: -4px; 
+                                                right: -8px; 
+                                                width: 14px; 
+                                                height: 14px; 
+                                                border-radius: 50%;
+                                                border: 2px solid var(--bg-secondary);">
+                                    ` : ''}
+                                </div>
+                            <div>
+                                <div class="token-name">
+                                    ${token.baseToken.name}
+                                </div>
+                                <div class="token-symbol">${token.baseToken.symbol}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>$${parseFloat(token.priceUsd).toFixed(8)}</td>
+                    <td>$${formatCompactNumber(token.marketCap)}</td>
+                    <td class="compact-column ${token.priceChange?.m5 > 0 ? 'positive' : 'negative'}">${formatPriceChange(token.priceChange?.m5)}</td>
+                    <td class="compact-column ${token.priceChange?.h1 > 0 ? 'positive' : 'negative'}">${formatPriceChange(token.priceChange?.h1)}</td>
+                    <td class="compact-column ${token.priceChange?.h6 > 0 ? 'positive' : 'negative'}">${formatPriceChange(token.priceChange?.h6)}</td>
+                    <td class="compact-column ${token.priceChange?.h24 > 0 ? 'positive' : 'negative'}">${formatPriceChange(token.priceChange?.h24)}</td>
+                    <td class="compact-column">${formatVolumeWithIndicator(getVolumeForTimeframe(token))}</td>
+                    <td class="compact-column">$${formatCompactNumber(token.liquidity?.usd)}</td>
+                    <td class="chart-column">
+                        <div class="token-links">
+                            <a href="https://dexscreener.com/${token.chainId}/${token.baseToken.address}" target="_blank" title="DexScreener">🦅</a>
+                            ${isGmgnSupported(token.chainId) ? 
+                                `<a href="https://gmgn.ai/${getGmgnChainId(token.chainId)}/token/${token.baseToken.address}" target="_blank" title="GMGN">🦖</a>` : ''}
+                            <a href="https://www.geckoterminal.com/${token.chainId}/tokens/${token.baseToken.address}" target="_blank" title="GekoTerminal">🦎</a>
+                        </div>
+                    </td>
+                `;
+                
+                // 为数据行添加点击事件
+                dataRow.addEventListener('click', (e) => {
+                    // 如果点击的是链接，不触发展开图表
+                    if (e.target.tagName.toLowerCase() === 'a') {
+                        return;
+                    }
+                    handleRowClick(index);
+                });
+                
+                // 创建图表行
+                const chartRow = document.createElement('tr');
+                chartRow.className = 'chart-row';
+                chartRow.innerHTML = `
+                    <td colspan="10">
+                        <div class="chart-container">
+                            <iframe class="dexscreener-iframe" title="DEXscreener Trading Chart" loading="lazy"></iframe>
+                        </div>
+                    </td>
+                `;
+                
+                // 添加行到表格
+                tbody.appendChild(dataRow);
+                tbody.appendChild(chartRow);
+                
+                // 如果该行在展开状态数组中，则恢复展开状态
+                if (expandedRows.includes(index)) {
+                    dataRow.classList.add('active');
+                    chartRow.classList.add('expanded');
+                    
+                    // 恢复或加载图表
+                    const iframe = chartRow.querySelector('iframe');
+                    if (iframe) {
+                        const existingChartUrl = existingChartRows.get(index);
+                        if (existingChartUrl) {
+                            iframe.src = existingChartUrl;
+                        } else if (!iframe.src) {
+                            const chartUrl = getDexScreenerChartUrl(token);
+                            if (chartUrl) {
+                                iframe.src = chartUrl;
+                            }
+                        }
+                    }
+                }
             });
 
-            item.addEventListener('mouseout', () => {
-                currentIndex = -1;
-                updateSelection();
+            // 更新排序指示器
+            document.querySelectorAll('.sort-indicator').forEach(indicator => {
+                const sortElement = indicator.hasAttribute('data-sort') ? indicator : indicator.closest('[data-sort]');
+                if (!sortElement) return;
+                
+                const column = sortElement.dataset.sort;
+                if (column === currentSort.column) {
+                    indicator.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
+                    indicator.classList.add('active');
+                } else {
+                    indicator.textContent = '';  // 修改这里，不显示任何指示器
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const seconds = Math.floor((now - lastUpdateTime) / 1000);
+            const lastUpdateElement = document.getElementById('lastUpdate');
+            // 保留指示灯元素，只更新文本部分
+            lastUpdateElement.innerHTML = `<span class="update-indicator"></span>Last update: ${seconds} s ago`;
+        }
+
+        async function fetchTokenData() {
+            try {
+                const promises = tokenAddresses.map(address =>
+                    fetch(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
+                        .then(response => response.json())
+                );
+
+                const results = await Promise.all(promises);
+                tokens = results
+                    .map(result => {
+                        const pairs = result.pairs;
+                        if (!pairs || pairs.length === 0) return null;
+                        
+                        return pairs.reduce((max, current) => 
+                            (current.liquidity?.usd || 0) > (max.liquidity?.usd || 0) ? current : max
+                        );
+                    })
+                    .filter(Boolean);
+
+                filteredTokens = tokens;
+                updateChainFilterOptions();
+                sortTokens(currentSort.column, currentSort.direction);
+                renderTable();
+                lastUpdateTime = new Date();
+            } catch (error) {
+                console.error('Error fetching token data:', error);
+                document.getElementById('tokenTableBody').innerHTML = 
+                    '<tr><td colspan="7">加载失败，请刷新页面重试</td></tr>';
+            }
+        }
+
+        /**
+         * 格式化数字为带千位分隔符的字符串
+         * @param {number} number - 要格式化的数字
+         * @returns {string} 格式化后的字符串
+         */
+        function formatNumber(number) {
+            return new Intl.NumberFormat('en-US').format(number);
+        }
+
+        /**
+         * 根据指定列和方向对代币列表进行排序
+         * @param {string} column - 排序列名
+         * @param {string} direction - 排序方向（'asc'或'desc'）
+         */
+        function sortTokens(column, direction) {
+            filteredTokens.sort((a, b) => {
+                let aValue, bValue;
+                
+                if (column.startsWith('priceChange.')) {
+                    const timeframe = column.split('.')[1];
+                    aValue = a.priceChange?.[timeframe] || 0;
+                    bValue = b.priceChange?.[timeframe] || 0;
+                } else {
+                    switch(column) {
+                        case 'name':
+                            aValue = a.baseToken.name;
+                            bValue = b.baseToken.name;
+                            return direction === 'asc' ? 
+                                aValue.localeCompare(bValue) : 
+                                bValue.localeCompare(aValue);
+                        case 'price':
+                            aValue = parseFloat(a.priceUsd);
+                            bValue = parseFloat(b.priceUsd);
+                            break;
+                        case 'marketCap':
+                            aValue = parseFloat(a.marketCap);
+                            bValue = parseFloat(b.marketCap);
+                            break;
+                        case 'volume':
+                            aValue = a.volume?.[currentVolumeTimeframe] || 0;
+                            bValue = b.volume?.[currentVolumeTimeframe] || 0;
+                            break;
+                        case 'liquidity':
+                            aValue = a.liquidity?.usd || 0;
+                            bValue = b.liquidity?.usd || 0;
+                            break;
+                    }
+                }
+                
+                return direction === 'asc' ? aValue - bValue : bValue - aValue;
+            });
+        }
+
+        // 从localStorage恢复排序状态
+        const savedSort = localStorage.getItem('currentSort');
+        if (savedSort) {
+            currentSort = JSON.parse(savedSort);
+            sortTokens(currentSort.column, currentSort.direction);
+        }
+
+        document.querySelectorAll('.token-table th').forEach(th => {
+            // 对于 Volume 列的特殊处理
+            if (!th.dataset.sort) {
+                const volumeSortElements = th.querySelectorAll('[data-sort="volume"]');
+                volumeSortElements.forEach(element => {
+                    element.addEventListener('click', () => {
+                        const column = element.dataset.sort;
+                        const direction = 
+                            currentSort.column === column && currentSort.direction === 'desc' ? 
+                            'asc' : 'desc';
+                        
+                        currentSort = { column, direction };
+                        // 保存排序状态到localStorage
+                        localStorage.setItem('currentSort', JSON.stringify(currentSort));
+                        sortTokens(column, direction);
+                        renderTable();
+                    });
+                });
+                return;
+            }
+
+            // 对于其他所有列的处理
+            const column = th.dataset.sort;
+            th.addEventListener('click', (event) => {
+                // 如果点击的是select元素，不执行排序
+                if (event.target.tagName.toLowerCase() === 'select') {
+                    return;
+                }
+                
+                const direction = 
+                    currentSort.column === column && currentSort.direction === 'desc' ? 
+                    'asc' : 'desc';
+                
+                currentSort = { column, direction };
+                // 保存排序状态到localStorage
+                localStorage.setItem('currentSort', JSON.stringify(currentSort));
+                expandedRows = [];
+                saveExpandedState();
+                sortTokens(column, direction);
+                renderTable();
             });
         });
 
-        typewriterEffect();
+        // 为select元素添加事件监听器
+        document.getElementById('chainFilter').addEventListener('change', function(e) {
+            updateChainFilter(this.value);
+        });
+
+        document.getElementById('volumeTimeframe').addEventListener('change', function(e) {
+            updateVolumeTimeframe(this.value);
+        });
+
+        // Set up auto refresh every minute
+        setInterval(fetchTokenData, 60000);
+        
+        // Update the "last update" text every second
+        setInterval(updateLastUpdateTime, 1000);
+
+        // 初始化时加载展开状态
+        loadExpandedState();
+        
+        // 初始加载数据
+        fetchTokenData();
     </script>
+    <footer style="
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background-color: var(--bg-primary);
+            display: flex;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        ">
+        © luoxbt.com 2025 <a href="https://x.com/luoxbt" style="margin: 0 8px; color: inherit;"> X <a href="https://warpcast.com/luoxbt" style="margin: 0 4px; color: inherit;"> Farcaster </a>
+    </footer>
 </body>
 </html>
+
+<style>
+    /* 统一表头样式 */
+    .token-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-align: center; /* 修改为居中对齐 */
+        white-space: nowrap;
+        border-bottom: 2px solid var(--border-color); /* 加粗底部边框 */
+        padding: 1rem 0.5rem; /* 统一内边距 */
+    }
+
+    /* 设置各列的固定宽度 */
+    .token-table th[data-sort="name"] {
+        width: 180px;
+        min-width: 180px;
+        max-width: 180px;
+    }
+
+    .token-table th[data-sort="price"] {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    .token-table th[data-sort="marketCap"] {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+    }
+
+    .token-table th[data-sort="priceChange.m5"],
+    .token-table th[data-sort="priceChange.h1"],
+    .token-table th[data-sort="priceChange.h6"],
+    .token-table th[data-sort="priceChange.h24"] {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+    }
+
+    /* Volume列特殊处理 */
+    .token-table th:nth-child(8) {
+        width: 120px;
+        min-width: 120px;
+        max-width: 120px;
+    }
+
+    .token-table th[data-sort="liquidity"] {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+    }
+
+    .token-table th.chart-column {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+        padding: 0.3rem 0.4rem;
+    }
+
+    /* 确保表格单元格也遵循相同的宽度 */
+    .token-table td:nth-child(1) {
+        width: 220px;
+        min-width: 220px;
+        max-width: 220px;
+    }
+
+    .token-table td:nth-child(2) {
+        width: 120px;
+        min-width: 120px;
+        max-width: 120px;
+    }
+
+    .token-table td:nth-child(3) {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+    }
+
+    .token-table td:nth-child(4),
+    .token-table td:nth-child(5),
+    .token-table td:nth-child(6),
+    .token-table td:nth-child(7) {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+    }
+
+    .token-table td:nth-child(8) {
+        width: 140px;
+        min-width: 140px;
+        max-width: 140px;
+    }
+
+    .token-table td:nth-child(9) {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    .token-table td:nth-child(10) {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+        padding: 0.3rem 0.4rem;
+    }
+
+    /* 确保表格总宽度固定 */
+    .token-table {
+        width: 1320px; /* 所有列宽度总和加上一些边距空间 */
+        min-width: 1320px;
+        table-layout: fixed;
+    }
+    
+    /* 图表展开行样式 */
+    .chart-row {
+        display: none;
+        background-color: var(--bg-secondary);
+        transition: all 0.3s ease;
+    }
+    
+    .chart-row.expanded {
+        display: table-row;
+    }
+    
+    .chart-row td {
+        padding: 0 !important;
+        height: auto !important;
+    }
+    
+    .chart-container {
+        width: 100%;
+        height: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+    
+    .dexscreener-iframe {
+        height: 100%;
+        width: 100%;
+        height: 500px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* 为可点击的行添加指示器 */
+    .token-table tbody tr {
+        cursor: pointer;
+        height: var(--row-height); /* 使用变量固定行高 */
+        min-height: var(--row-height);
+        max-height: var(--row-height);
+    }
+    
+    .token-table tbody tr:hover {
+        background-color: var(--hover-bg);
+    }
+    
+    /* 激活状态的行 */
+    .token-table tbody tr.active {
+        background-color: var(--hover-bg);
+        border-left: 3px solid var(--accent);
+    }
+    .table-container {
+        width: 100%;
+        max-width: 1320px;
+        height: calc(100vh - 200px);
+        overflow: auto;
+        position: relative;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .token-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: transparent;
+        border-radius: 16px;
+        overflow: visible;
+        table-layout: fixed;
+        flex: 0 0 auto; /* 防止表格自动拉伸 */
+    }
+    
+    .token-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: var(--bg-secondary);
+        border-bottom: 2px solid var(--border-color);
+        height: var(--row-height); /* 确保表头行高与数据行一致 */
+    }
+    .token-table th, .token-table td {
+        padding: 0.3rem 0.8rem; /* 优化后的紧凑内边距 */
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.875rem;
+        overflow: hidden;
+        text-overflow: ellipsis; /* 溢出时显示省略号 */
+        white-space: nowrap; /* 防止文本换行 */
+    }
+
+    /* 恢复 Token 名称和代号的原始大小 */
+    .token-name {
+        font-weight: 500;
+        font-size: 1rem; /* 原始名称字号 */
+    }
+    
+    .token-symbol {
+        color: var(--text-secondary);
+        font-size: 0.875rem; /* 保持原有小号字体 */
+    }
+
+    /* 列宽度设置 */
+    .token-table th.compact-column,
+    .token-table td.compact-column {
+        padding: 0.5rem 0.5rem 0.5rem 1rem; /* 减小上下内边距，增加左内边距，保持右侧空间 */
+        text-align: left; /* 改为左对齐 */
+        min-width: 80px;
+    }
+
+    /* 价格变化和交易量列宽度 */
+    .token-table th[data-sort^="priceChange."],
+    .token-table th[data-sort="volume"],
+    .token-table th[data-sort="liquidity"] {
+        min-width: 80px;
+        width: 80px;
+        max-width: 80px;
+    }
+    
+    .token-table th.chart-column {
+        text-align: center;
+    }
+    .token-table th.chart-column {
+        padding: 1rem 0.5rem;
+        width: 100px;
+    }
+
+    .token-table th {
+        background-color: rgba(22, 27, 34, 0.9);
+        color: var(--text-primary);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 100px;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding-right: 20px;
+        border-bottom: 2px solid var(--border-color);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .token-table th:hover {
+        background-color: var(--hover-bg);
+        color: var(--accent);
+    }
+
+    .token-table th > span:not(.sort-indicator) {
+        display: block;
+        text-align: center;
+    }
+
+    .token-table th .sort-indicator {
+        display: inline-block;
+        position: relative;
+        margin-left: 4px;
+        vertical-align: middle;
+    }
+
+    .token-table th:hover {
+        background-color: var(--hover-bg);
+    }
+
+    .token-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .token-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .token-info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .positive { color: var(--positive); }
+    .negative { color: var(--negative); }
+    
+    /* 交易量容器样式 */
+    .volume-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .volume-value {
+        text-align: right;
+        min-width: 50px;
+        margin-right: 8px;
+    }
+    
+    /* 交易量指示符号样式 */
+    .volume-indicator-1, .volume-indicator-2, .volume-indicator-3, .volume-indicator-4, .volume-indicator-5 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #3fb950 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-size: 0.9rem;
+        transform: scaleX(0.8);
+        display: inline-block;
+        text-align: left;
+        width: 60px;
+    }
+    
+    .volume-indicator-2 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #4ac866 100%);
+    }
+    
+    .volume-indicator-3 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #56d77c 100%);
+    }
+    
+    .volume-indicator-4 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #62e692 100%);
+    }
+    
+    .volume-indicator-5 {
+        background-image: linear-gradient(90deg, #3fb950 0%, #6ef5a8 100%);
+    }
+
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-secondary);
+    }
+
+    .price-change-group {
+        display: flex;
+        gap: 8px;
+        font-size: 0.875rem;
+    }
+
+    .price-change-item {
+        padding: 4px 8px;
+        border-radius: 4px;
+        background-color: var(--bg-primary);
+    }
+
+    select {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    select:hover {
+        background-color: var(--hover-bg);
+    }
+
+    .token-name {
+        font-weight: 500;
+    }
+
+    .token-symbol {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .last-update {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        background-color: var(--bg-primary);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .update-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--positive);
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { 
+            opacity: 0.4;
+            filter: drop-shadow(0 0 8px rgba(88, 166, 255, 0.6))
+                    drop-shadow(0 0 20px rgba(88, 166, 255, 0.4));
+        }
+        50% {
+            opacity: 1;
+            filter: drop-shadow(0 0 12px rgba(88, 166, 255, 0.8))
+                    drop-shadow(0 0 30px rgba(88, 166, 255, 0.6));
+        }
+        100% { 
+            opacity: 0.4;
+            filter: drop-shadow(0 0 8px rgba(88, 166, 255, 0.6))
+                    drop-shadow(0 0 20px rgba(88, 166, 255, 0.4));
+        }
+    }
+
+    @keyframes text-glow {
+        from {
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.4),
+                         0 0 20px rgba(88, 166, 255, 0.3);
+        }
+        to {
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.6),
+                         0 0 30px rgba(88, 166, 255, 0.4),
+                         0 0 40px rgba(88, 166, 255, 0.2);
+        }
+    }
+
+    /* 添加 token 链接样式 */
+    .token-links {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+    }
+    
+    .token-links a {
+        text-decoration: none;
+        font-size: 16px;
+        opacity: 0.7;
+        transition: opacity 0.2s, transform 0.2s;
+        color: var(--text-secondary);
+        padding: 0 4px;
+    }
+    
+    .token-links a:hover {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    .sort-indicator {
+        display: inline-block;
+        width: 12px;
+        text-align: center;
+        margin-left: 4px;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        opacity: 0;  /* 默认不可见 */
+        position: relative;
+        vertical-align: middle;
+    }
+    
+    .sort-indicator.active {
+        color: var(--accent);
+        opacity: 1;  /* 激活时可见 */
+    }
+
+    .token-table th[data-sort="name"] {
+        width: 180px;
+        min-width: 180px;
+        max-width: 180px;
+    }
+
+    .token-table th[data-sort="price"],
+    .token-table th[data-sort="marketCap"] {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    /* 新增 Volume 列宽度设置 */
+    .token-table th[data-sort="volume"] {
+        width: 140px;
+        min-width: 140px;
+        max-width: 140px;
+    }
+
+    .token-table th[data-sort="liquidity"] {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    .token-table th.chart-column {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+        padding: 0.3rem 0.4rem;
+    }
+
+    .token-table th[data-sort="priceChange.m5"],
+    .token-table th[data-sort="priceChange.h1"],
+    .token-table th[data-sort="priceChange.h6"],
+    .token-table th[data-sort="priceChange.h24"] {
+        width: 80px;
+        min-width: 80px;
+        max-width: 80px;
+    }
+</style>
