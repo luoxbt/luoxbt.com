@@ -17,5 +17,6 @@ export const tokenAddresses = [
     '0xa4a2e2ca3fbfe21aed83471d28b6f65a233c6e00',
     '0x2e7df1528f4ea427f48b49ae8a1f78149db7185a',
     '0x0578d8a44db98b23bf096a382e016e29a5ce0ffe',
+    '0x17370B15cCc01EeA564e4aB639a6c0D3553Af811',
     '6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN'
 ];
