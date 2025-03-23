@@ -1,22 +1,21 @@
-/**
- * 代币合约地址列表
- * 这个文件包含了所有需要在LUMINDEX中显示的代币合约地址
- */
-
 export const tokenAddresses = [
-    '0x1bc0c42215582d5A085795f4baDbaC3ff36d1Bcb',
-    '0x22aF33FE49fD1Fa80c7149773dDe5890D3c76F3b',
-    '0x20DD04c17AFD5c9a8b3f2cdacaa8Ee7907385BEF',
-    '0x06f71fb90F84b35302d132322A3C90E4477333b0',
-    '0x36B0Bc9B7cd78C589076c8Fb7CD3f68b25b9770a',
-    '0x1d008f50FB828eF9DEbBEaE1B71FfFe929bf317',
-    '6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN',
-    '0x5C85D6C6825aB4032337F11Ee92a72DF936b46F6',
-    '0xe920d1DA9A4D59126dC35996Ea242d60EFca1304',
-    '0xffff003a6bad9b743d658048742935fffe2b6ed7',
-    '0x0c880f6761f1af8d9aa9c466984b80dab9a8c9e8',
-    '0xb2f776e9c1c926c4b2e54182fac058da9af0b6a5'
+    '0x1bc0c42215582d5a085795f4badbac3ff36d1bcb',
+    '0x2efac0a597a37050aafcf4bec627249d533dd9f8',
+    '0x06f71fb90f84b35302d132322a3c90e4477333b0',
+    '0x1d008f50fb828ef9debbbeae1b71fffe929bf317',
+    '0x22af33fe49fd1fa80c7149773dde5890d3c76f3b',
+    '0x3ec2156d4c0a9cbdab4a016633b7bcf6a8d68ea2',
+    '0x20dd04c17afd5c9a8b3f2cdacaa8ee7907385bef',
+    '0x3080ce06eee2869e1b0287ad0de73f9421f977a3',
+    '0x712f43b21cf3e1b189c27678c0f551c08c01d150',
+    '0x5c85d6c6825ab4032337f11ee92a72df936b46f6',
+    '0x31e2eed04a62b232da964a097d8c171584e3c3bd',
+    '0xe920d1da9a4d59126dc35996ea242d60efca1304',
+    '0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c',
+    '0x290f057a2c59b95d8027aa4abf31782676502071',
+    '0xdc7f7ad44f3ed116577417017cf37a19dff9ffe9',
+    '0xa4a2e2ca3fbfe21aed83471d28b6f65a233c6e00',
+    '0x2e7df1528f4ea427f48b49ae8a1f78149db7185a',
+    '0x0578d8a44db98b23bf096a382e016e29a5ce0ffe',
+    '6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN'
 ];
-
-// 您可以在此文件中添加更多代币地址，或者修改现有地址
-// 修改此文件后，只需刷新页面即可看到更新
